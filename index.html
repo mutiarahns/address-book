@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Address Book</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <script type="text/javascript" src="app.js" defer></script>
+  </head>
+  <body>
+    <nav class="navigation-container">
+      <button class="more-button" onclick="toggleSidebar()">
+        <img src="assets/icons/icon-more.png" alt="more icon" width="24" />
+      </button>
+
+      <a href="/">
+        <h1>Contacts</h1>
+      </a>
+    </nav>
+
+    <aside id="sidebar">
+      <ul class="sidebar-menu">
+        <li>
+          <a href="/create">
+            <div class="create-new">+ Create New</div>
+          </a>
+        </li>
+        <li>
+          <a href="/">
+            <div class="sidemenu-list selected">
+              <img
+                src="assets/icons/icon-person.png"
+                alt="icon-person"
+                width="20"
+                height="20"
+              />
+              Contact List
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="/trash">
+            <div class="sidemenu-list">
+              <img
+                src="assets/icons/icon-trash.png"
+                alt="icon-person"
+                width="20"
+                height="20"
+              />
+              Trash
+            </div>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-container">
+      <h2>Contacts</h2>
+
+      <hr />
+
+      <div class="list-navigation">
+        <div class="action-container">
+          <img
+            src="assets/icons/icon-search.png"
+            alt="search"
+            width="24"
+            height="24"
+          />
+          <form>
+            <input type="text" class="search-text" placeholder="Search" />
+          </form>
+        </div>
+      </div>
+
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>Company</th>
+          <th>Label</th>
+          <th></th>
+        </tr>
+      </table>
+    </main>
+
+    <footer></footer>
+  </body>
+</html>
+<!-- End Generation Here -->

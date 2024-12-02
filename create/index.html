@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Address Book</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../index.css" />
+    <script type="text/javascript" src="../app.js" defer></script>
+  </head>
+  <body>
+    <nav class="navigation-container">
+      <button class="more-button" onclick="toggleSidebar()">
+        <img src="../assets/icons/icon-more.png" alt="more icon" width="24" />
+      </button>
+
+      <a href="/">
+        <h1>Contacts</h1>
+      </a>
+    </nav>
+
+    <aside id="sidebar">
+      <ul class="sidebar-menu">
+        <li>
+          <a href="/create">
+            <div class="create-new">+ Create New</div>
+          </a>
+        </li>
+        <li>
+          <a href="/">
+            <div class="sidemenu-list">Contact List</div>
+          </a>
+        </li>
+        <li>
+          <a href="/trash">
+            <div class="sidemenu-list">Trash</div>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main>
+      <h2>Create New Contact</h2>
+
+      <hr />
+    </main>
+  </body>
+</html>
