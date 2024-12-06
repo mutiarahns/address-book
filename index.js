@@ -44,3 +44,22 @@ const labels = [
     color: "#00C853",
   },
 ];
+
+contacts.forEach((contact) => {
+  console.log(`ID: ${contact.id}`);
+  console.log(`Fullname: ${contact.name}`);
+  console.log(`Email: ${contact.email}`);
+  console.log(`Phone: ${contact.phone}`);
+  console.log(`Address: ${contact.address}`);
+  console.log(`Status: ${contact.status}`);
+  console.log(`Is Favorite: ${contact.idFavorite}`);
+  console.log(`Is Deleted: ${contact.isDeleted}`);
+  console.log(`Created Date: ${contact.createdDate}`);
+  console.log(`Deleted Date: ${contact.deletedDate}`);
+  console.log(
+    `Labels: ${contact.labels
+      .map((label) => labels.find((l) => l.labelId === label).labelName)
+      .join(", ")}`
+  );
+  console.log("----------------------------------------");
+});
