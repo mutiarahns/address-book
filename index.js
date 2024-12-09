@@ -51,7 +51,7 @@ const contactList = () => {
     Email         : ${contact.email}
     Phone         : ${contact.phone}
     Address       : ${contact.address}
-    Favorite      : ${contact.idFavorite ? "yes" : "no"}
+    Favorite      : ${contact.isFavorite ? "yes" : "no"}
     Created Date  : ${contact.createdDate}
     Labels        : ${contact.labels
       .map(
