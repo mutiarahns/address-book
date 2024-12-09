@@ -43,7 +43,7 @@ const labels = [
   },
 ];
 
-const contactList = () => {
+function getcontactList() {
   contacts.forEach((contact) => {
     console.log(`
     ID            : ${contact.id}
@@ -60,7 +60,7 @@ const contactList = () => {
       .join(", ")}
   `);
   });
-};
+}
 
 function getContactsDetail() {
   if (contacts.length === 0) {
@@ -81,4 +81,4 @@ function getContactsDetail() {
 const contactsDetail = getContactsDetail();
 
 console.log(contactsDetail);
-console.log(contactList());
+console.log(getcontactList());
