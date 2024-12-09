@@ -5,7 +5,7 @@ const contacts = [
     email: "mutiara@aaa.com",
     phone: "+62 888-888-8888",
     address: "123 Main St, New York, NY 10001",
-    idFavorite: true,
+    isFavorite: true,
     isDeleted: false,
     createdDate: "6/10/2024",
     deletedDate: null,
@@ -17,7 +17,7 @@ const contacts = [
     email: "bana@aaa.com",
     phone: "+62 888-888-8889",
     address: "123 Main St, New York, NY 10001",
-    idFavorite: false,
+    isFavorite: false,
     isDeleted: false,
     createdDate: "6/10/2024",
     deletedDate: null,
@@ -43,7 +43,7 @@ const labels = [
   },
 ];
 
-function getContactList() {
+const contactList = () => {
   contacts.forEach((contact) => {
     console.log(`
     ID            : ${contact.id}
@@ -60,10 +60,15 @@ function getContactList() {
       .join(", ")}
   `);
   });
-}
+};
 
 function getContactsDetail() {
-  console.log("Conatct List:");
+  if (contacts.length === 0) {
+    console.log("Contact List is empty");
+    return "";
+  }
+
+  console.log("Contact List:");
   let contactList = contacts.map((element, index) => {
     const { name, phone, email, address } = element;
 
@@ -73,6 +78,7 @@ function getContactsDetail() {
   return contactList.join("\n");
 }
 
-const contactList = getContactsDetail();
+const contactsDetail = getContactsDetail();
 
-console.log(contactList);
+console.log(contactsDetail);
+console.log(contactList());
