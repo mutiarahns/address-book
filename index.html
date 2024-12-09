@@ -15,7 +15,6 @@
     ></script>
     <script src="./assets/js/init-alpine.js"></script>
     <script src="./assets/js/focus-trap.js" defer></script>
-    <script src="index.js" defer></script>
   </head>
   <body>
     <div
@@ -427,7 +426,7 @@
                   <tbody
                     class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
                   >
-                    <tr class="text-gray-700 dark:text-gray-400">
+                    <tr id="table-row" class="text-gray-700 dark:text-gray-400">
                       <td class="px-4 py-3">
                         <div class="flex items-center text-sm">
                           <!-- Avatar with inset shadow -->
@@ -689,5 +688,7 @@
       </div>
     </div>
     <!-- End of modal backdrop -->
+
+    <script src="index.js"></script>
   </body>
 </html>

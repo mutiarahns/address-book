@@ -5,7 +5,6 @@ const contacts = [
     email: "mutiara@aaa.com",
     phone: "+62 888-888-8888",
     address: "123 Main St, New York, NY 10001",
-    status: "Approved",
     idFavorite: true,
     isDeleted: false,
     createdDate: "6/10/2024",
@@ -15,10 +14,9 @@ const contacts = [
   {
     id: 2,
     name: "Sahbana",
-    email: "mutiara@aaa.com",
-    phone: "+62 888-888-8888",
+    email: "bana@aaa.com",
+    phone: "+62 888-888-8889",
     address: "123 Main St, New York, NY 10001",
-    status: "Approved",
     idFavorite: false,
     isDeleted: false,
     createdDate: "6/10/2024",
@@ -45,21 +43,36 @@ const labels = [
   },
 ];
 
-contacts.forEach((contact) => {
-  console.log(`ID: ${contact.id}`);
-  console.log(`Fullname: ${contact.name}`);
-  console.log(`Email: ${contact.email}`);
-  console.log(`Phone: ${contact.phone}`);
-  console.log(`Address: ${contact.address}`);
-  console.log(`Status: ${contact.status}`);
-  console.log(`Is Favorite: ${contact.idFavorite}`);
-  console.log(`Is Deleted: ${contact.isDeleted}`);
-  console.log(`Created Date: ${contact.createdDate}`);
-  console.log(`Deleted Date: ${contact.deletedDate}`);
-  console.log(
-    `Labels: ${contact.labels
-      .map((label) => labels.find((l) => l.labelId === label).labelName)
-      .join(", ")}`
-  );
-  console.log("----------------------------------------");
-});
+function getContactList() {
+  contacts.forEach((contact) => {
+    console.log(`
+    ID            : ${contact.id}
+    Fullname      : ${contact.name}
+    Email         : ${contact.email}
+    Phone         : ${contact.phone}
+    Address       : ${contact.address}
+    Favorite      : ${contact.idFavorite ? "yes" : "no"}
+    Created Date  : ${contact.createdDate}
+    Labels        : ${contact.labels
+      .map(
+        (label) => labels.find((element) => element.labelId === label).labelName
+      )
+      .join(", ")}
+  `);
+  });
+}
+
+function getContactsDetail() {
+  console.log("Conatct List:");
+  let contactList = contacts.map((element, index) => {
+    const { name, phone, email, address } = element;
+
+    return `${index + 1}. ${name} (${phone}) ${email} in ${address}`;
+  });
+
+  return contactList.join("\n");
+}
+
+const contactList = getContactsDetail();
+
+console.log(contactList);
