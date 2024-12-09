@@ -43,7 +43,7 @@ const labels = [
   },
 ];
 
-function getcontactList() {
+function getContactList() {
   contacts.forEach((contact) => {
     console.log(`
     ID            : ${contact.id}
