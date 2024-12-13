@@ -73,8 +73,10 @@ function getFavoriteContacts() {
 function addContact(contact) {
   const id = contacts[contacts.length - 1].id + 1 || 0;
 
-  contact.id = id;
-  contacts.push(contact);
+  contacts.push({
+    id: id,
+    ...contact,
+  });
 
   return `Contact added with id ${id}: 
   ${contact.name}, ${contact.phone}, ${contact.email}, ${contact.address}`;
