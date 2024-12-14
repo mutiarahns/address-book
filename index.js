@@ -1,198 +1,140 @@
-const contacts = [
-  {
-    id: 1,
-    name: "Mutiara Nofitasari",
-    email: "mutiara@aaa.com",
-    phone: "+62 888-888-8888",
-    address: "123 Main St, New York, NY 10001",
-    isFavorited: true,
-    isDeleted: false,
-    createdAt: new Date().toLocaleDateString(),
-    deletedAt: null,
-    labels: [2],
-  },
-  {
-    id: 2,
-    name: "Sahbana",
-    email: "bana@aaa.com",
-    phone: "+62 888-888-8889",
-    address: "123 Main St, New York, NY 10001",
-    isFavorited: true,
-    isDeleted: false,
-    createdAt: new Date().toLocaleDateString(),
-    deletedAt: null,
-    labels: [1, 2],
-  },
-];
+let dataContacts = [];
+let labels = [];
 
-const labels = [
-  {
-    labelId: 1,
-    labelName: "Work",
-    color: "#00C853",
-  },
-  {
-    labelId: 2,
-    labelName: "Family",
-    color: "#00C853",
-  },
-  {
-    labelId: 3,
-    labelName: "Friend",
-    color: "#00C853",
-  },
-];
+// ===============================================
+function loadAllData() {
+  dataContacts = loadContacts();
+  labels = loadLabels();
 
-function getContacts() {
-  return contacts
-    .map((contact) => {
-      return `
+  if (dataContacts.length === 0) {
+    console.log("No contacts found");
+    return;
+  }
+}
+
+function renderContacts() {
+  loadAllData();
+
+  if (dataContacts.length === 0) {
+    console.log("No contacts found");
+    return;
+  }
+
+  dataContacts.forEach((contact) => {
+    const createdAt = new Intl.DateTimeFormat("id-ID", {
+      dateStyle: "long",
+      timeStyle: "short",
+      timeZone: "Asia/Jakarta",
+    }).format(new Date(contact.createdAt));
+
+    const deletedAt = contact.deletedAt
+      ? new Intl.DateTimeFormat("id-ID", {
+          dateStyle: "long",
+          timeStyle: "short",
+          timeZone: "Asia/Jakarta",
+        }).format(new Date(contact.deletedAt))
+      : "N/A";
+
+    console.log(`
       ID            : ${contact.id}
       Fullname      : ${contact.name}
       Email         : ${contact.email}
       Phone         : ${contact.phone}
       Address       : ${contact.address}
       Favorite      : ${contact.isFavorited ? "yes" : "no"}
-      Created Date  : ${contact.createdAt}
+      Created Date  : ${createdAt}
+      Is Deleted    : ${contact.isDeleted ? "yes" : "no"}
+      Deleted Date  : ${deletedAt}
       Labels        : ${contact.labels
         .map(
-          (label) =>
-            labels.find((element) => element.labelId === label).labelName
+          (label) => labels.find((element) => element.id === label).labelName
         )
         .join(", ")}
-      ======================================================
-      `;
-    })
-    .join("\n");
-}
-
-function getFavoriteContacts() {
-  return contacts.filter((contact) => contact.isFavorited);
-}
-
-function addContact(contact) {
-  const id = contacts[contacts.length - 1].id + 1 || 0;
-
-  contacts.push({
-    id: id,
-    ...contact,
+    `);
   });
-
-  return `Contact added with id ${id}: 
-  ${contact.name}, ${contact.phone}, ${contact.email}, ${contact.address}`;
 }
 
-function deleteContact(id) {
-  const index = contacts.findIndex((element) => element.id === id);
-
-  if (index === -1) {
-    return `Contact with id ${id} is not found in the list`;
-  }
-
-  contacts.splice(index, 1);
-  return `Contact with id ${id} deleted`;
-}
-
-function searchContact(searchTerm) {
-  return contacts.filter((contact) => {
+function searchContacts(contacts, searchTerm) {
+  const searchedContacts = contacts.filter((contact) => {
     const terms = searchTerm.toLocaleLowerCase();
     const { name, email, phone, address } = contact;
 
     return (
       name.toLocaleLowerCase().includes(terms) ||
-      email.includes(terms) ||
-      phone.includes(terms) ||
-      address.includes(terms)
+      email.toLocaleLowerCase().includes(terms) ||
+      phone.toLocaleLowerCase().includes(terms) ||
+      address.toLocaleLowerCase().includes(terms)
     );
   });
-}
 
-function searchByLabel(terms) {
-  return contacts.filter((contact) => {
-    return contact.labels.includes(terms);
-  });
-}
-
-function getContactDetails(id) {
-  let contact = contacts.find((element) => element.id === id);
-
-  if (!contact) {
-    return `Contact with id ${id} is not found in the list`;
+  if (searchedContacts.length === 0) {
+    console.log("No contacts found");
   }
 
-  const { name, phone, email, address } = contact;
-
-  return `Contact detail for id ${id}:
-  ${name}, ${phone}, ${email}, ${address}`;
+  return searchedContacts || [];
 }
 
-/*
- * Get contats
- */
-const contactList = getContacts();
+function generateId(contacts) {
+  return contacts[contacts.length - 1].id + 1 || 0;
+}
 
-console.log("Contact list:");
-console.log(contactList);
+function addContact(contacts, newContactInput) {
+  const newContact = {
+    id: generateId(contacts),
+    createdAt: new Date(),
+    deletedAt: null,
+    isDeleted: false,
+    ...newContactInput,
+  };
 
-/*
- * Get contact details
- */
-console.log(getContactDetails(1));
-console.log(getContactDetails(3));
+  const newContacts = [...contacts, newContact];
 
-console.log("Search contacts:");
-const filteredContacts = searchContact("mutiara");
-console.log({ filteredContacts });
+  saveContacts(newContacts);
 
-/*
- * Add new contact
- */
-console.log("Add new contact:");
-console.log(
-  addContact({
-    name: "Jhon Doe",
-    email: "jhon@aaa.com",
-    phone: "+62 888-888-8882",
-    address: "123 Main St, New York, NY 10002",
-    createdAt: new Date().toLocaleDateString(),
-    labels: [3],
-  })
-);
-console.log(
-  addContact({
-    name: "Jhon",
-    email: "jhon@aaa.com",
-    phone: "+62 888-888-8882",
-    address: "123 Main St, New York, NY 10002",
-    createdAt: new Date().toLocaleDateString(),
-    labels: [1, 3],
-  })
-);
-console.log("Contact list:");
-console.log(getContacts());
+  renderContacts();
+}
 
-/*
- * Delete contact
- */
-console.log("Delete contact:");
-console.log(deleteContact(3));
-console.log(getContacts());
+function deleteContact(contacts, id) {
+  const filteredContacts = contacts.filter((contact) => contact.id != id);
 
-/*
- * Search by label
- */
-console.log("Search by label:");
-const family = searchByLabel(2);
-const friend = searchByLabel(3);
-const work = searchByLabel("work");
+  saveContacts(filteredContacts);
 
-console.log({ family });
-console.log({ friend });
-console.log({ work });
+  renderContacts();
+}
 
-/*
- * Get favorite contacts
- */
-console.log("Favorite contacts:");
-const favoriteContacts = getFavoriteContacts();
-console.log({ favoriteContacts });
+function updateContact(contacts, id, newContactInput) {
+  const originalContact = contacts.find((contact) => contact.id === id);
+  const updatedContact = {
+    ...originalContact,
+    name: newContactInput.name || originalContact.name,
+    email: newContactInput.email || originalContact.email,
+    phone: newContactInput.phone || originalContact.phone,
+    address: newContactInput.address || originalContact.address,
+    deletedAt: newContactInput.deletedAt || originalContact.deletedAt,
+    isDeleted: newContactInput.isDeleted,
+    labels: newContactInput.labels || originalContact.labels,
+  };
+  const updatedContacts = contacts.map((contact) => {
+    if (contact.id === id) {
+      return updatedContact;
+    }
+    return contact;
+  });
+
+  saveContacts(updatedContacts);
+
+  renderContacts();
+}
+
+const getGithubUser = async () => {
+  const response = await fetch("https://api.github.com/users");
+  const data = await response.json();
+
+  return data;
+};
+
+renderContacts();
+
+getGithubUser().then((data) => {
+  console.log(data);
+});
