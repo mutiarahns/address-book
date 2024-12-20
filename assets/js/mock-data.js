@@ -17,7 +17,7 @@ const mockDataContacts = [
     email: "bana@gmail.com",
     phone: "628123456710",
     address: "Jl. Pancoran, Jakarta",
-    isFavorited: false,
+    isFavorited: true,
     createdAt: new Date(),
     deletedAt: null,
     isDeleted: false,
@@ -29,7 +29,7 @@ const mockDataContacts = [
     email: "aisyah@gmail.com",
     phone: "628123456711",
     address: "Jl. Sudirman, Jakarta",
-    isFavorited: true,
+    isFavorited: false,
     createdAt: new Date(),
     deletedAt: null,
     isDeleted: false,
@@ -53,7 +53,7 @@ const mockDataContacts = [
     email: "citra@gmail.com",
     phone: "628123456713",
     address: "Jl. Gatot Subroto, Jakarta",
-    isFavorited: true,
+    isFavorited: false,
     createdAt: new Date(),
     deletedAt: null,
     isDeleted: false,
@@ -77,10 +77,31 @@ const mockDataContacts = [
     email: "eko@gmail.com",
     phone: "628123456715",
     address: "Jl. MH Thamrin, Jakarta",
-    isFavorited: true,
+    isFavorited: false,
     createdAt: new Date(),
     deletedAt: null,
     isDeleted: false,
     labels: [2, 3],
+  },
+];
+
+const mockLabels = [
+  {
+    id: 1,
+    labelName: "Family",
+    color:
+      "text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100",
+  },
+  {
+    id: 2,
+    labelName: "Work",
+    color:
+      "text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700",
+  },
+  {
+    id: 3,
+    labelName: "Friend",
+    color:
+      "text-orange-600 bg-orange-100 rounded-full dark:bg-orange-600 dark:text-orange-100",
   },
 ];
