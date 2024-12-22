@@ -6,9 +6,8 @@ const mockDataContacts = [
     phone: "628123456789",
     address: "Jl. Pancoran, Jakarta",
     isFavorited: true,
+    birthdate: new Date("1995-01-01"),
     createdAt: new Date(),
-    deletedAt: null,
-    isDeleted: false,
     labels: [1, 2],
   },
   {
@@ -18,9 +17,8 @@ const mockDataContacts = [
     phone: "628123456710",
     address: "Jl. Pancoran, Jakarta",
     isFavorited: true,
+    birthdate: new Date("1995-01-01"),
     createdAt: new Date(),
-    deletedAt: null,
-    isDeleted: false,
     labels: [1, 2],
   },
   {
@@ -30,9 +28,8 @@ const mockDataContacts = [
     phone: "628123456711",
     address: "Jl. Sudirman, Jakarta",
     isFavorited: false,
+    birthdate: new Date("1995-01-01"),
     createdAt: new Date(),
-    deletedAt: null,
-    isDeleted: false,
     labels: [1],
   },
   {
@@ -42,9 +39,8 @@ const mockDataContacts = [
     phone: "628123456712",
     address: "Jl. Thamrin, Jakarta",
     isFavorited: false,
+    birthdate: new Date("1995-01-01"),
     createdAt: new Date(),
-    deletedAt: null,
-    isDeleted: false,
     labels: [2],
   },
   {
@@ -54,9 +50,8 @@ const mockDataContacts = [
     phone: "628123456713",
     address: "Jl. Gatot Subroto, Jakarta",
     isFavorited: false,
+    birthdate: new Date("1995-01-01"),
     createdAt: new Date(),
-    deletedAt: null,
-    isDeleted: false,
     labels: [1, 3],
   },
   {
@@ -66,9 +61,8 @@ const mockDataContacts = [
     phone: "628123456714",
     address: "Jl. Rasuna Said, Jakarta",
     isFavorited: false,
+    birthdate: new Date("1995-01-01"),
     createdAt: new Date(),
-    deletedAt: null,
-    isDeleted: false,
     labels: [3],
   },
   {
@@ -78,9 +72,8 @@ const mockDataContacts = [
     phone: "628123456715",
     address: "Jl. MH Thamrin, Jakarta",
     isFavorited: false,
+    birthdate: new Date("1995-01-01"),
     createdAt: new Date(),
-    deletedAt: null,
-    isDeleted: false,
     labels: [2, 3],
   },
 ];
@@ -88,19 +81,19 @@ const mockDataContacts = [
 const mockLabels = [
   {
     id: 1,
-    labelName: "Family",
+    labelName: "🏠 Family",
     color:
       "text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100",
   },
   {
     id: 2,
-    labelName: "Work",
+    labelName: "💼 Work",
     color:
       "text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700",
   },
   {
     id: 3,
-    labelName: "Friend",
+    labelName: "👋 Friend",
     color:
       "text-orange-600 bg-orange-100 rounded-full dark:bg-orange-600 dark:text-orange-100",
   },

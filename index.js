@@ -1,314 +1,225 @@
-const tableBodyElement = document.getElementById("table-body");
-const searchInputElement = document.getElementById("search-input");
-const emptyContactElement = document.getElementById("empty-contact-card");
-const tableDataElement = document.getElementById("table-data");
+const contactListElement = document.getElementById("contact-list");
+const searchFormElement = document.getElementById("search-form");
 const labelListElement = document.getElementById("label-list");
 
-let dataContacts = [];
-let labels = [];
-let pageNumber = 0;
+const fromElement = document.getElementById("formElm");
 
-// ===============================================
-function loadAllData() {
-  dataContacts = loadContacts();
-  labels = loadLabels();
-
-  if (dataContacts.length === 0) {
-    console.log("No contacts found");
-    return;
-  }
-}
-
-function renderContacts() {
-  loadAllData();
-
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
+function renderPage() {
+  let contacts = loadContacts().reverse();
+  const querString = window.location.search;
+  const urlParams = new URLSearchParams(querString);
   const selectedLabel = urlParams.get("label");
+  const favorite = urlParams.get("favorite");
+  const searchQuery = urlParams.get("q");
+  const searchInput = document.getElementById("search-input");
 
-  let contacts = dataContacts.filter((contact) => !contact.isDeleted).reverse();
+  searchInput.value = searchQuery;
 
-  if (selectedLabel) {
-    contacts = contacts.filter((contact) =>
-      contact.labels.includes(parseInt(selectedLabel))
-    );
-  }
+  renderLabelCategory(selectedLabel, favorite);
+
+  contacts = searchQuery ? searchContacts(contacts, searchQuery) : contacts;
+  contacts = favorite
+    ? contacts.filter((contact) => contact.isFavorited)
+    : contacts;
+  contacts = selectedLabel
+    ? contacts.filter((contact) =>
+        contact.labels.includes(parseInt(selectedLabel))
+      )
+    : contacts;
 
   if (contacts.length === 0) {
-    emptyContactElement.classList.remove("hidden");
-    tableDataElement.classList.add("hidden");
+    renderEmptyContact();
     return;
   }
 
-  renderTableBody(contacts);
-  renderPagination(contacts);
+  renderContactList(contacts);
 }
 
-function renderTableBody(contacts) {
-  const filteredContacts = contacts.filter((contact) => !contact.isDeleted);
+function renderContactList(contacts) {
+  const labels = loadLabels();
 
-  tableBodyElement.innerHTML = "";
-  tableBodyElement.innerHTML = filteredContacts
+  contactListElement.innerHTML = "";
+  contactListElement.innerHTML = contacts
     .map((contact) => {
-      const { id, name, email, phone, address, isFavorited } = contact;
-
       return `
-      <tr id="table-row-${id}" class="text-gray-700 dark:text-gray-400">
-        <td class="px-4 py-3">
-          <div class="flex items-center text-sm">
-            <!-- Avatar with inset shadow -->
+      <div class="flex font-sans border border-2 rounded-md">
+        <div class="flex-none w-48 relative">
+          <img
+            src="https://ui-avatars.com/api/?name=${
+              contact.name
+            }&size=200&font-size=0.15rem"
+            alt=""
+            class="absolute rounded-md inset-0 w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div class="flex-auto p-6">
+          <div class="flex flex-wrap">
+            <h1 class="flex-auto text-lg font-semibold text-slate-900">
+              ${contact.name}
+            </h1>
+
+            <div class="space-x-2 flex text-sm">
+              <button
+                onClick="updateContact(${
+                  contact.id
+                }, { isFavorited: ${!contact.isFavorited} }, '${
+        !contact.isFavorited
+          ? "Contact has been added to Favorites"
+          : "Contact has been removed from Favorites"
+      }')"
+                class="${
+                  contact.isFavorited
+                    ? "w-9 h-9 rounded-full flex items-center justify-center text-white bg-slate-900 text-lg"
+                    : "w-9 h-9 rounded-full flex items-center justify-center text-white bg-slate-300 text-lg"
+                }"
+              >
+                <i class="fa-solid fa-heart"></i>
+              </button>
+            </div>
+
             <div
-              class="relative hidden w-8 h-8 mr-3 rounded-full md:block"
+              class="w-full flex-none text-sm font-medium text-slate-700 mt-2"
             >
-              <img
-                src="https://ui-avatars.com/api/?background=random&name=
-                  ${name}
-                &size=200"
-                class="inline-flex items-center justify-center object-cover rounded-full mr-4 text-sm text-white transition-all duration-200 ease-in-out h-9 w-9 rounded-xl"
-                alt="user1"
-              />
-              <div
-                class="absolute inset-0 rounded-full shadow-inner"
-                aria-hidden="true"
-              ></div>
+              ${contact.phone} -
+              <span class="font-semibold">${contact.email}</span>
             </div>
             <div>
-              <p class="font-semibold">${name}</p>
-              <p class="text-xs text-gray-600 dark:text-gray-400">
-                ${isFavorited ? "♥" : ""}
-              </p>
+              <div class="text-sm font-semibold text-slate-500">
+                🎂 ${getDateFormat(contact.birthdate || "")}
+              </div>
+              <div class="text-sm text-slate-700">
+                ${contact.address}
+              </div>
             </div>
           </div>
-        </td>
-        <td class="px-4 py-3 text-sm">${email}</td>
-        <td class="px-4 py-3 text-sm">${phone}</td>
-        <td class="px-4 py-3 text-sm">${address}</td>
-        <td class="px-4 py-3 text-sm">
-          <div class="flex items-center space-x-4 text-sm">
-             ${contact.labels
-               .map((label) => {
-                 const currentLabel = labels.find(
-                   (element) => element.id === label
-                 );
 
-                 return `
-                  <span 
-                    class="px-2 py-1 font-semibold leading-tight ${currentLabel.color}"
+          <div class="text-sm font-semibold text-slate-700 mt-4">Tags:</div>
+
+          <div
+            class="flex items-baseline mt-1 mb-6 pb-6 border-b border-slate-200"
+          >
+            <ul class="flex-wrap gap-2 flex text-sm">
+              ${contact.labels
+                .map((label) => {
+                  const currentLabel = labels.find(
+                    (element) => element.id === label
+                  );
+
+                  return `
+                  <li
+                    class="text-xs px-3 py-2 bg-slate-200 rounded-full border border-2 flex items-center justify-center font-bold text-slate-900"
                   >
                     ${currentLabel.labelName}
-                  </span>
+                  </li>
                 `;
-               })
-               .join("")}
+                })
+                .join("")}
+            </ul>
           </div>
-        </td>
-        <td class="px-4 py-3">
-          <div class="flex items-center space-x-4 text-sm">
-            <button
-              class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
-              aria-label="Edit"
-            >
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+
+          <div class="flex space-x-4 mt-6 text-sm font-medium">
+            <div class="flex-auto flex space-x-2">
+              <a
+                href="/detail/?id=${contact.id}"
+                class="rounded-md bg-blue-500 py-2 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-blue-500/90 focus:shadow-none active:bg-blue-500/90 hover:bg-blue-500/90 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="button"
               >
-                <path
-                  d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-                ></path>
-              </svg>
-            </button>
-            <button
-              href="javascript:;"
-              @click="deleteContactById(${contact.id})"
-              class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
-              aria-label="Delete"
-            >
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+                <i class="fa-regular fa-eye w-4 h-4" aria-hidden="true"></i>
+                Detail
+              </a>
+              <a
+                href="/edit/?id=${contact.id}"
+                class="rounded-md bg-slate-900 py-2 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-slate-900/90 focus:shadow-none active:bg-slate-900/90 hover:bg-slate-900/90 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="button"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </button>
+                <i
+                  class="fa-regular fa-pen-to-square w-4 h-4"
+                  aria-hidden="true"
+                ></i>
+                Edit
+              </a>
+              <button
+                onClick="deleteContact(${contact.id})"
+                class="rounded-md bg-[#ea4335] py-2 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-[#ea4335]/90 focus:shadow-none active:bg-[#ea4335]/90 hover:bg-[#ea4335]/90 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="button"
+              >
+                <i class="fa-solid fa-trash w-4 h-4" aria-hidden="true"></i>
+                Delete
+              </button>
+            </div>
           </div>
-        </td>
-      </tr>
+        </div>
+      </div>
     `;
     })
     .join("");
 }
 
-function renderPagination(contacts) {
-  const paginationElement = document.getElementById("contact-pagination");
-  const paginationInfoElement = document.getElementById(
-    "contact-pagination-info"
-  );
-  const totalPage = Math.ceil(contacts.length / 10);
-
-  emptyContactElement.classList.add("hidden");
-  tableDataElement.classList.remove("hidden");
-
-  paginationInfoElement.innerHTML = "";
-  paginationInfoElement.innerHTML = `
-  Showing ${pageNumber * contacts.length + 1} - ${
-    (pageNumber + 1) * contacts.length
-  } of ${dataContacts.length}`;
-
-  paginationElement.innerHTML = "";
-  paginationElement.innerHTML = `
-    <button
-      ${pageNumber === 0 ? "disabled" : ""}
-      onclick="changePage(${pageNumber - 1})"
-      class="${
-        pageNumber === 0
-          ? "px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple opacity-50 cursor-not-allowed focus:outline-none"
-          : "px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
-      }"
-      aria-label="Previous"
-    >
-      <svg
-        aria-hidden="true"
-        class="w-4 h-4 fill-current"
-        viewBox="0 0 20 20"
-      >
-        <path
-          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-          clip-rule="evenodd"
-          fill-rule="evenodd"
-        ></path>
-      </svg>
-    </button>
-
-    <div class="flex items-center justify-center px-3">
-      <p class="text-slate-600">
-        Page
-        <strong class="text-slate-800">${
-          pageNumber + 1
-        }</strong> of&nbsp;<strong
-          class="text-slate-800"
-          >${totalPage}</strong
-        >
-      </p>
-    </div>
-
-    <button
-      ${pageNumber === totalPage - 1 ? "disabled" : ""}
-      onclick="changePage(${pageNumber + 1})" 
-      class="${
-        pageNumber === totalPage - 1
-          ? "px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple opacity-50 cursor-not-allowed focus:outline-none"
-          : "px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
-      }"
-      aria-label="Next"
-    >
-      <svg
-        class="w-4 h-4 fill-current"
-        aria-hidden="true"
-        viewBox="0 0 20 20"
-      >
-        <path
-          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-          clip-rule="evenodd"
-          fill-rule="evenodd"
-        ></path>
-      </svg>
-    </button>
-  `;
-}
-
-function renderLables() {
+function renderLabelCategory(selectedLabel, favorite) {
   const labels = loadLabels();
 
   labelListElement.innerHTML = "";
+
   labelListElement.innerHTML = labels
-    .map(
-      (label) => `
-  <li
-    class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-  >
-    <a class="w-full" href="/?label=${label.id}">Family</a>
-  </li>
-  `
-    )
+    .map((label) => {
+      return `
+      <li class="rounded-full flex items-center justify-center">
+        <a
+          href="/?label=${label.id}"
+          class="${
+            selectedLabel == label.id
+              ? "px-10 py-2.5 font-medium rounded-full border-2 border-slate-200 flex items-center justify-center text-white text-sm bg-slate-900"
+              : "px-10 py-2.5 font-medium rounded-full border-2 border-slate-200 flex items-center justify-center text-slate-900 text-sm hover:font-medium hover:bg-slate-900 hover:text-white"
+          }"
+        >
+          ${label.labelName}
+        </a>
+      </li>
+      `;
+    })
     .join("");
+
+  labelListElement.innerHTML += `
+      <li class="rounded-full flex items-center justify-center">
+        <a
+          href="/?favorite=true"
+          class="${
+            favorite
+              ? "px-10 py-2.5 font-medium rounded-full border-2 border-slate-200 flex items-center justify-center text-white text-sm bg-slate-900"
+              : "px-10 py-2.5 font-medium rounded-full border-2 border-slate-200 flex items-center justify-center text-slate-900 text-sm hover:font-medium hover:bg-slate-900 hover:text-white"
+          }"
+        >
+          🤎 Favorite
+        </a>
+      </li>
+      `;
 }
 
-function searchContacts(contacts, searchTerm) {
-  const searchedContacts = contacts.filter((contact) => {
-    const terms = searchTerm.toLocaleLowerCase();
-    const { name, email, phone, address } = contact;
+function renderEmptyContact() {
+  contactListElement.classList.remove("xl:grid-cols-2");
+  contactListElement.classList.add("xl:grid-cols-1");
+  contactListElement.classList.remove("lg:grid-cols-2");
+  contactListElement.classList.add("lg:grid-cols-1");
 
-    return (
-      name.toLocaleLowerCase().includes(terms) ||
-      email.toLocaleLowerCase().includes(terms) ||
-      phone.toLocaleLowerCase().includes(terms) ||
-      address.toLocaleLowerCase().includes(terms)
-    );
-  });
-
-  if (searchedContacts.length === 0) {
-    console.log("No contacts found");
-  }
-
-  return searchedContacts || [];
+  contactListElement.innerHTML = "";
+  contactListElement.innerHTML = `
+  <li class="flex">
+    <a href="/create" class="hover:border-blue-500 hover:border-solid hover:bg-white hover:text-blue-500 group w-full flex flex-col items-center justify-center rounded-md border-2 border-dashed border-slate-300 text-sm leading-6 text-slate-900 font-medium py-3">
+      <img src="assets/icon/empty-box.png" alt="icon-love">
+      <p class="mt-5 text-lg font-semibold text-slate-900">No contacts found</p>
+      <p class="mt-2 mb-5 text-sm font-medium text-slate-500">Create new contact to get started!</p>
+    </a>
+  </li>
+  `;
 }
 
-function deleteContact(contacts, id) {
-  const filteredContacts = contacts.filter((contact) => contact.id != id);
-
-  saveContacts(filteredContacts);
-
-  renderContacts();
+function editContact(id) {
+  window.location.href = `/edit?id=${id}`;
 }
 
-function deleteContactById(id) {
-  const originalContact = dataContacts.find((contact) => contact.id === id);
-
-  if (!originalContact) {
-    return;
-  }
-
-  showAlert(
-    "warning",
-    `Are you sure you want to delete ${originalContact.name}?`,
-    `Deleted contact will be moved to Trash and deleted forever if you empty the Trash.`,
-    dataContacts,
-    originalContact
-  );
-}
-
-function showAlert(type, title, message, storedContacts, deletedContact) {
-  Swal.fire({
-    title: title,
-    text: message,
-    icon: type,
-    showCancelButton: true,
-    confirmButtonText: "Yes",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      updateContact(storedContacts, deletedContact.id, {
-        deletedAt: new Date(),
-        isDeleted: true,
-      });
-      Swal.fire(
-        "",
-        `${deletedContact.name} has been deleted successfully`,
-        "success"
-      );
-      if (storedContacts.length < 1) window.location.href = "/";
-    }
-  });
-}
-
-function updateContact(contacts, id, newContactInput) {
+function updateContact(id, newContactInput, message = "") {
+  const contacts = loadContacts();
   const originalContact = contacts.find((contact) => contact.id === id);
   const updatedContact = {
     ...originalContact,
@@ -316,8 +227,7 @@ function updateContact(contacts, id, newContactInput) {
     email: newContactInput.email || originalContact.email,
     phone: newContactInput.phone || originalContact.phone,
     address: newContactInput.address || originalContact.address,
-    deletedAt: newContactInput.deletedAt || originalContact.deletedAt,
-    isDeleted: newContactInput.isDeleted,
+    isFavorited: newContactInput.isFavorited,
     labels: newContactInput.labels || originalContact.labels,
   };
   const updatedContacts = contacts.map((contact) => {
@@ -329,9 +239,64 @@ function updateContact(contacts, id, newContactInput) {
 
   saveContacts(updatedContacts);
 
-  renderContacts();
+  renderPage();
+
+  setTimeout(() => {
+    alert(message);
+  }, 500);
 }
 
+function searchContacts(contacts, searchInput) {
+  return contacts.filter((contact) => {
+    const terms = searchInput.toLocaleLowerCase();
+    const { name, email, phone, address, birthdate } = contact;
+
+    return (
+      name.toLocaleLowerCase().includes(terms) ||
+      email.toLocaleLowerCase().includes(terms) ||
+      phone.toLocaleLowerCase().includes(terms) ||
+      address.toLocaleLowerCase().includes(terms)
+    );
+  });
+}
+
+function deleteContact(id) {
+  const contacts = loadContacts();
+  const filteredContacts = contacts.filter((contact) => contact.id != id);
+
+  saveContacts(filteredContacts);
+
+  renderPage();
+
+  setTimeout(() => {
+    alert("Contact has been deleted");
+  }, 500);
+}
+
+function getDateFormat(fromDate) {
+  if (!fromDate) {
+    return "-";
+  }
+
+  const date = new Date(fromDate);
+
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    dateStyle: "long",
+    timeZone: "Asia/Jakarta",
+  }).format(date);
+
+  return formattedDate ? formattedDate : "-";
+}
+
+searchFormElement.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const searchFormData = new FormData(searchFormElement);
+
+  console.log(searchFormData);
+
+  window.location.href = `/?q=${searchFormData.get("search-input") || ""}`;
+});
+
 window.addEventListener("load", function () {
-  renderContacts();
+  renderPage();
 });

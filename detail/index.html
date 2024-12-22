@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <section class="bg-white max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header
+        class="bg-white space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6"
+      >
+        <div class="flex items-center justify-between">
+          <a href="/">
+            <h1 class="font-semibold text-2xl text-slate-900">
+              Contact Management
+            </h1>
+          </a>
+
+          <a
+            href="/create"
+            class="hover:bg-slate-500 group flex items-center rounded-md bg-slate-900 text-white text-sm font-medium pl-2 pr-3 py-2 shadow-sm"
+          >
+            <i class="fa-solid fa-plus mr-2"></i>
+            Create New
+          </a>
+        </div>
+
+        <form id="search-form" method="post" class="group relative">
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -mt-2.5 text-slate-400 pointer-events-none group-focus-within:text-blue-500"
+          ></i>
+          <input
+            id="search-input"
+            name="search-input"
+            class="focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm"
+            type="text"
+            aria-label="Search Contact"
+            placeholder="Search Contact..."
+          />
+        </form>
+      </header>
+
+      <main>
+        <div
+          id="detail-contact-container"
+          class="bg-gray-50 px-8 py-8 mb-6 pb-6 border-b border-slate-200"
+        >
+          <div class="flex items-baseline px-4 sm:px-0 space-x-2">
+            <h3 class="text-base/7 font-semibold text-gray-900">
+              Contact Detail
+            </h3>
+            <a
+              href="/edit/?id=0"
+              class="px-3 py-1.5 font-medium rounded-full text-sm/6 text-gray-900 bg-slate-300 hover:bg-slate-500 active:bg-slate-500 hover:text-white active:text-white transition-all duration-150 ease-in-out"
+            >
+              <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+              Edit
+            </a>
+            <a
+              href="/edit/?id=0"
+              class="px-3 py-1.5 font-medium rounded-full text-sm/6 text-gray-900 bg-slate-300 hover:bg-slate-500 active:bg-slate-500 hover:text-white active:text-white transition-all duration-150 ease-in-out"
+            >
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              Delete
+            </a>
+          </div>
+          <div class="mt-6 border-t border-gray-100">
+            <dl class="divide-y divide-gray-100">
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Full name</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  Margot Foster
+                </dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">
+                  Email address
+                </dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  margotfoster@example.com
+                </dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">
+                  Phone Number
+                </dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  $120,000
+                </dd>
+              </div>
+
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Birthdate</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  $120,000
+                </dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Address</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
+                  incididunt cillum culpa consequat. Excepteur qui ipsum aliquip
+                  consequat sint. Sit id mollit nulla mollit nostrud in ea
+                  officia proident. Irure nostrud pariatur mollit ad adipisicing
+                  reprehenderit deserunt qui eu.
+                </dd>
+              </div>
+
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Labels</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  <ul class="flex-wrap gap-2 flex text-sm">
+                    <li
+                      class="text-xs px-10 py-2 bg-slate-200 rounded-full border border-2 flex items-center justify-center font-semibold text-slate-900"
+                    >
+                      Family
+                    </li>
+                    <li
+                      class="text-xs px-2.5 py-1.5 bg-red-600 rounded-full border border-2 flex items-center justify-center font-bold text-white"
+                    >
+                      <i class="fa-solid fa-heart"></i>
+                    </li>
+                  </ul>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </main>
+    </section>
+  </body>
+
+  <script src="../storage.js"></script>
+  <script src="../assets/js/detail.js"></script>
+</html>
