@@ -17,8 +17,6 @@ function saveLabels(labels) {
 }
 
 function loadLabels() {
-  const labels = JSON.parse(localStorage.getItem("labels"));
-
   const mockLabels = [
     {
       id: 1,
@@ -40,10 +38,5 @@ function loadLabels() {
     },
   ];
 
-  if (!labels || labels.length === 0) {
-    saveLabels(mockLabels);
-    return mockLabels;
-  }
-
-  return labels;
+  return mockLabels;
 }

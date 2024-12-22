@@ -11,11 +11,18 @@ function renderPage() {
   const selectedLabel = urlParams.get("label");
   const favorite = urlParams.get("favorite");
   const searchQuery = urlParams.get("q");
+  const mockData = urlParams.get("mock");
   const searchInput = document.getElementById("search-input");
 
   searchInput.value = searchQuery;
 
   renderLabelCategory(selectedLabel, favorite);
+
+  if (mockData) {
+    let reversedContacts = [...mockDataContacts].reverse();
+    saveContacts([...mockDataContacts]);
+    contacts = [...reversedContacts];
+  }
 
   contacts = searchQuery ? searchContacts(contacts, searchQuery) : contacts;
   contacts = favorite
