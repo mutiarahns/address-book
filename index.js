@@ -298,5 +298,8 @@ searchFormElement.addEventListener("submit", (event) => {
 });
 
 window.addEventListener("load", function () {
+  // reset labels
+  saveLabels([]);
+
   renderPage();
 });
