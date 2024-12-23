@@ -22,6 +22,9 @@ function renderPage() {
     let reversedContacts = [...mockDataContacts].reverse();
     saveContacts([...mockDataContacts]);
     contacts = [...reversedContacts];
+
+    window.location.href = "/";
+    return;
   }
 
   contacts = searchQuery ? searchContacts(contacts, searchQuery) : contacts;

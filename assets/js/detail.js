@@ -145,12 +145,21 @@ function renderLabels(storedLabels) {
 }
 
 function deleteContact(id) {
-  const contacts = loadContacts();
-  const filteredContacts = contacts.filter((contact) => contact.id != id);
+  if (window.confirm("Do you really want to delete this contact?")) {
+    const contacts = loadContacts();
+    const filteredContacts = contacts.filter((contact) => contact.id != id);
 
-  saveContacts(filteredContacts);
+    saveContacts(filteredContacts);
 
-  window.location.href = "/";
+    showAlert("Contact has been deleted", () => {
+      window.location.href = "/";
+    });
+  }
+}
+
+function showAlert(message, callback) {
+  callback();
+  alert(message);
 }
 
 window.addEventListener("load", renderDetailContactForm);
