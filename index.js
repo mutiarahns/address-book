@@ -110,21 +110,25 @@ function renderContactList(contacts) {
             class="flex items-baseline mt-1 mb-6 pb-6 border-b border-slate-200"
           >
             <ul class="flex-wrap gap-2 flex text-sm">
-              ${contact.labels
-                .map((label) => {
-                  const currentLabel = labels.find(
-                    (element) => element.id === label
-                  );
+              ${
+                !contact.labels || contact.labels.length === 0
+                  ? "-"
+                  : contact.labels
+                      .map((label) => {
+                        const currentLabel = labels.find(
+                          (element) => element.id === label
+                        );
 
-                  return `
+                        return `
                   <li
                     class="text-xs px-3 py-2 bg-slate-200 rounded-full border border-2 flex items-center justify-center font-bold text-slate-900"
                   >
                     ${currentLabel.labelName}
                   </li>
                 `;
-                })
-                .join("")}
+                      })
+                      .join("")
+              }
             </ul>
           </div>
 
