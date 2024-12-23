@@ -4,7 +4,7 @@ const labelListElement = document.getElementById("label-list");
 
 const fromElement = document.getElementById("formElm");
 
-function renderPage() {
+function renderHomePage() {
   let contacts = loadContacts().reverse();
   const querString = window.location.search;
   const urlParams = new URLSearchParams(querString);
@@ -51,14 +51,14 @@ function renderContactList(contacts) {
   contactListElement.innerHTML = "";
   contactListElement.innerHTML = contacts
     .map((contact) => {
+      const avatarURL = `https://ui-avatars.com/api/?name=${contact.name}&size=200&font-size=0.15rem`;
+
       return `
       <div class="flex font-sans border border-2 rounded-md">
         <div class="flex-none w-48 relative">
           <img
-            src="https://ui-avatars.com/api/?name=${
-              contact.name
-            }&size=200&font-size=0.15rem"
-            alt=""
+            src="${avatarURL}"
+            alt="${`${contact.name} Avatar`}"
             class="absolute rounded-md inset-0 w-full h-full object-cover"
             loading="lazy"
           />
@@ -73,11 +73,7 @@ function renderContactList(contacts) {
               <button
                 onClick="updateContact(${
                   contact.id
-                }, { isFavorited: ${!contact.isFavorited} }, '${
-        !contact.isFavorited
-          ? "Contact has been added to Favorites"
-          : "Contact has been removed from Favorites"
-      }')"
+                }, { isFavorited: ${!contact.isFavorited} })"
                 class="${
                   contact.isFavorited
                     ? "w-9 h-9 rounded-full flex items-center justify-center text-white bg-slate-900 text-lg"
@@ -253,11 +249,7 @@ function updateContact(id, newContactInput, message = "") {
 
   saveContacts(updatedContacts);
 
-  renderPage();
-
-  setTimeout(() => {
-    alert(message);
-  }, 500);
+  renderHomePage();
 }
 
 function searchContacts(contacts, searchInput) {
@@ -281,7 +273,7 @@ function deleteContact(id) {
 
     saveContacts(filteredContacts);
 
-    showAlert("Contact has been deleted", renderPage);
+    showAlert("Contact has been deleted", renderHomePage);
   }
 }
 
@@ -305,18 +297,9 @@ function getDateFormat(fromDate) {
   return formattedDate ? formattedDate : "-";
 }
 
-searchFormElement.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const searchFormData = new FormData(searchFormElement);
-
-  console.log(searchFormData);
-
-  window.location.href = `/?q=${searchFormData.get("search-input") || ""}`;
-});
-
 window.addEventListener("load", function () {
   // reset labels
   saveLabels([]);
 
-  renderPage();
+  renderHomePage();
 });
