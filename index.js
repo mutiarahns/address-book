@@ -268,16 +268,19 @@ function searchContacts(contacts, searchInput) {
 }
 
 function deleteContact(id) {
-  const contacts = loadContacts();
-  const filteredContacts = contacts.filter((contact) => contact.id != id);
+  if (window.confirm("Do you really want to delete this contact?")) {
+    const contacts = loadContacts();
+    const filteredContacts = contacts.filter((contact) => contact.id != id);
 
-  saveContacts(filteredContacts);
+    saveContacts(filteredContacts);
 
-  renderPage();
+    showAlert("Contact has been deleted", renderPage);
+  }
+}
 
-  setTimeout(() => {
-    alert("Contact has been deleted");
-  }, 500);
+function showAlert(message, callback) {
+  callback();
+  alert(message);
 }
 
 function getDateFormat(fromDate) {
